@@ -1,0 +1,125 @@
+.card-body p {
+  min-height: 60px;
+}
+
+.object-cover {
+  height: 320px;
+  object-fit: cover;
+}
+
+.xsmall { font-size: .78rem; }
+
+.hero {
+  background: url("https://media.istockphoto.com/id/1389712277/es/foto/dos-copas-de-vino-blanco-y-tinto-en-una-barrica-vieja-afuera-en-el-vi%C3%B1edo.jpg?s=612x612&w=0&k=20&c=LCKtoCf7tpIkwVRPJcNG3Ybxg-lJaJVs1Hz0Qr-tnmA=")
+    no-repeat center center;
+  background-size: cover;
+  min-height: 75vh;
+  position: relative;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55); /* oscurece para mejor contraste */
+}
+
+.hero .container {
+  position: relative;
+  z-index: 2;
+}
+
+.btn-success {
+  transition: transform 0.2s ease;
+}
+
+.btn-success:hover {
+  transform: scale(1.05);
+}
+
+/********************************************/
+/* Hero con Parallax */
+.hero {
+  background: url("https://images.unsplash.com/photo-1500375592092-40eb2168fd21?q=80&w=1600") no-repeat center center;
+  background-size: cover;
+  min-height: 75vh;
+  position: relative;
+  transform: scale(1.05);
+  transition: transform 0.5s ease-out;
+}
+
+/* Efecto de hover para el Hero */
+.hero:hover {
+  transform: scale(1.1);
+}
+
+/* Estilo de los botones */
+.btn-success {
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn-success:hover {
+  background-color: #28a745; /* Color más brillante */
+  transform: scale(1.1);
+}
+
+/* Carrusel de Ofertas */
+.carousel-item {
+  transition: transform 0.5s ease;
+}
+
+.carousel-item img {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Efecto de zoom para la imagen del carrusel */
+.carousel-item.active img {
+  transform: scale(1.1);
+}
+
+/* Efecto de hover en tarjetas de productos */
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Estilo de las tarjetas de Testimonios */
+.card-body p {
+  min-height: 60px;
+  font-size: 0.95rem;
+}
+
+/* Estilos de las estrellas de rating */
+.text-warning i {
+  font-size: 1rem;
+}
+
+
+/*********/
+/* Tarjetas de comentarios */
+.card-body p {
+  min-height: 60px;
+  font-size: 1rem;
+  font-style: italic;
+  color: #555;
+}
+
+/* Estrellas de rating */
+.text-warning i {
+  font-size: 1.25rem;
+  margin-right: 2px;
+}
+
+/* Espaciado entre tarjetas de testimonios */
+.card {
+  border-radius: 10px;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Avatar centrado y tamaño adecuado */
+.card-body img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}

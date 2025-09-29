@@ -1,0 +1,4 @@
+footer .link-dark:hover,
+footer .link-secondary:hover { text-decoration: underline; }
+
+footer .bi { line-height: 1; }  /* íconos centrados */

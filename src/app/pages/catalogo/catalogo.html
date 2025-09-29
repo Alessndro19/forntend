@@ -1,0 +1,18 @@
+<p>catalogo works!</p>
+<div class="container py-4">
+  <h2 class="mb-4">Catálogo</h2>
+
+  <div class="row g-3">x|
+    <div class="col-6 col-md-4 col-lg-3" *ngFor="let p of productos">
+      <div class="card h-100 shadow-sm">
+        <div class="ratio ratio-1x1 bg-light"></div>
+        <div class="card-body">
+          <h6 class="card-title mb-1">{{ p.nombre }}</h6>
+          <small class="text-muted d-block mb-2">★ {{ p.rating }} / 5</small>
+          <div class="fw-semibold mb-2">{{ p.precio | currency:'PEN':'symbol':'1.2-2' }}</div>
+          <button class="btn btn-dark btn-sm w-100" (click)="addToCart(p)">Agregar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

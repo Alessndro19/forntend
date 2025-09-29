@@ -1,0 +1,13 @@
+.navbar .nav-link {
+  font-weight: 500;
+  color: #333;
+}
+
+.navbar .nav-link.active {
+  color: #198754 !important; /* Verde Bootstrap */
+}
+
+.input-group .form-control:focus {
+  box-shadow: none;
+  border-color: #198754;
+}

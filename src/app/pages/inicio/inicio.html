@@ -1,0 +1,114 @@
+
+<!-- HERO PRINCIPAL -->
+<section class="hero d-flex align-items-center text-center text-white border-bottom border-secondary">
+  <div class="container">
+    <h1 class="display-4 fw-bold mb-3">Descubre Nuestros Vinos Exclusivos</h1>
+    <p class="lead mb-4">
+      Explora la pasión y tradición de las bodegas peruanas. Vinos y piscos de la más alta calidad,
+      directo de nuestros viñedos a tu mesa.
+    </p>
+    <a routerLink="/catalogo" class="btn btn-lg btn-success px-4 shadow">Comprar Ahora</a>
+  </div>
+</section>
+
+<!-- 3 Cards con efectos -->
+<section class="container py-5">
+  <h4 class="fw-semibold mb-4">Productos Destacados</h4>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="ratio ratio-16x9 bg-light"></div>
+        <div class="card-body">
+          <h5 class="card-title">Novedades</h5>
+          <p class="card-text">Lo más reciente del mes.</p>
+          <a routerLink="/catalogo" class="btn btn-outline-dark btn-sm">Explorar</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="ratio ratio-16x9 bg-light"></div>
+        <div class="card-body">
+          <h5 class="card-title">Más votados</h5>
+          <p class="card-text">Productos con mejor calificación.</p>
+          <a routerLink="/catalogo" class="btn btn-outline-dark btn-sm">Ver ranking</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="ratio ratio-16x9 bg-light"></div>
+        <div class="card-body">
+          <h5 class="card-title">Ofertas</h5>
+          <p class="card-text">Promos de temporada.</p>
+          <a routerLink="/catalogo" class="btn btn-outline-dark btn-sm">Aprovechar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- OFERTAS EXCLUSIVAS -->
+<section class="container py-4">
+  <h4 class="fw-semibold mb-3">Ofertas Exclusivas</h4>
+
+  <div id="offersCarousel" class="carousel slide shadow-sm rounded overflow-hidden" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div
+        class="carousel-item"
+        *ngFor="let img of banners; let i = index"
+        [class.active]="i === 0"
+      >
+        <img [src]="img" class="d-block w-100 object-cover" alt="Oferta {{ i + 1 }}" />
+      </div>
+    </div>
+
+    <!-- Controles -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#offersCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#offersCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
+  </div>
+</section>
+
+
+<!-- COMENTARIOS DE CLIENTES -->
+<section class="bg-light py-5 border-top">
+  <div class="container">
+    <h4 class="fw-semibold mb-4">Comentarios de Clientes</h4>
+
+    <div class="row g-4">
+      <div class="col-md-4" *ngFor="let t of testimonios">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <p class="small text-muted mb-4">“{{ t.texto }}”</p>
+
+            <div class="d-flex align-items-center">
+              <!-- Avatar -->
+              <img [src]="t.avatar" class="rounded-circle me-3 shadow-sm" width="60" height="60" alt="{{ t.nombre }}" />
+              <div>
+                <div class="fw-semibold small">{{ t.nombre }}</div>
+                <div class="text-muted xsmall">{{ t.empresa }}</div>
+
+                <!-- Estrellas de rating -->
+                <div class="text-warning mt-1">
+                  <i class="bi" *ngFor="let s of stars; let i = index"
+                     [ngClass]="(i < t.rating) ? 'bi-star-fill' : 'bi-star'"></i>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,199 @@
+<div class="bodegas-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <h1>Nuestras Bodegas Asociadas</h1>
+      <p>Descubre la excelencia de nuestras bodegas asociadas, cada una con su propia historia y tradición vitivinícola.</p>
+      <button class="btn-agregar" (click)="abrirModal()">
+        <i class="fas fa-plus"></i> Agregar Bodega
+      </button>
+    </div>
+  </section>
+
+  <!-- Grid de Bodegas -->
+  <section class="bodegas-grid-section">
+    <div class="container">
+      <div class="bodegas-grid">
+        <div *ngFor="let bodega of bodegas" class="bodega-card">
+          <div class="bodega-imagen">
+            <img [src]="bodega.imagenLogo" [alt]="bodega.nombre">
+          </div>
+          <div class="bodega-content">
+            <h3>{{ bodega.nombre }}</h3>
+            <p class="bodega-descripcion">{{ bodega.descripcion }}</p>
+
+            <div class="bodega-info">
+              <div class="info-item">
+                <i class="fas fa-user"></i>
+                <span>{{ bodega.propietario }}</span>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>{{ bodega.direccion }}</span>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-phone"></i>
+                <span>{{ bodega.telefono }}</span>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-envelope"></i>
+                <span>{{ bodega.correo }}</span>
+              </div>
+            </div>
+
+            <div class="bodega-actions">
+              <a *ngIf="bodega.ubicacionMaps" [href]="bodega.ubicacionMaps" target="_blank" class="btn-mapa">
+                <i class="fas fa-map"></i> Ver en Mapa
+              </a>
+              <button class="btn-contactar">
+                <i class="fas fa-envelope"></i> Contactar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje cuando no hay bodegas -->
+      <div *ngIf="bodegas.length === 0" class="no-bodegas">
+        <div class="no-bodegas-content">
+          <i class="fas fa-store-slash"></i>
+          <h3>No hay bodegas registradas</h3>
+          <p>Comienza agregando la primera bodega haciendo clic en el botón "Agregar Bodega"</p>
+          <button class="btn-agregar" (click)="abrirModal()">
+            <i class="fas fa-plus"></i> Agregar Primera Bodega
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal para agregar bodega -->
+  <div *ngIf="mostrarModal" class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Agregar Nueva Bodega</h2>
+        <button class="btn-cerrar" (click)="cerrarModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form (ngSubmit)="crearBodega()" #bodegaForm="ngForm" class="modal-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nombre">Nombre de la Bodega *</label>
+            <input
+              id="nombre"
+              [(ngModel)]="nuevaBodega.nombre"
+              name="nombre"
+              placeholder="Ej: Bodega Central"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="propietario">Propietario *</label>
+            <input
+              id="propietario"
+              [(ngModel)]="nuevaBodega.propietario"
+              name="propietario"
+              placeholder="Ej: Juan Pérez"
+              required>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="direccion">Dirección *</label>
+            <input
+              id="direccion"
+              [(ngModel)]="nuevaBodega.direccion"
+              name="direccion"
+              placeholder="Ej: Av. Principal 123, Ica"
+              required>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="descripcion">Descripción</label>
+            <textarea
+              id="descripcion"
+              [(ngModel)]="nuevaBodega.descripcion"
+              name="descripcion"
+              placeholder="Describe la bodega, sus productos especialidades..."
+              rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="telefono">Teléfono *</label>
+            <input
+              id="telefono"
+              [(ngModel)]="nuevaBodega.telefono"
+              name="telefono"
+              placeholder="Ej: +51 987 654 321"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="correo">Correo Electrónico *</label>
+            <input
+              id="correo"
+              [(ngModel)]="nuevaBodega.correo"
+              name="correo"
+              type="email"
+              placeholder="Ej: info@bodega.com"
+              required>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="ubicacionMaps">Enlace de Google Maps</label>
+            <input
+              id="ubicacionMaps"
+              [(ngModel)]="nuevaBodega.ubicacionMaps"
+              name="ubicacionMaps"
+              type="url"
+              placeholder="Ej: https://maps.google.com/...">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="imagenLogo">URL de la Imagen</label>
+            <input
+              id="imagenLogo"
+              [(ngModel)]="nuevaBodega.imagenLogo"
+              name="imagenLogo"
+              type="url"
+              placeholder="Ej: https://ejemplo.com/imagen.jpg">
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancelar" (click)="cerrarModal()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-guardar" [disabled]="!bodegaForm.valid">
+            <i class="fas fa-save"></i> Guardar Bodega
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <section class="hero-section">
+  <div class="container">
+    <h1>Nuestra Herencia Vitivinícola</h1>
+    <p class="intro-text">
+      Bodegas Ica Alianza es el resultado de generaciones dedicadas al arte de cultivar la vid y producir vinos y piscos de carácter único. Situados en el corazón del valle de Ica, nuestros viñedos se benefician de un clima excepcional que da vida a cada una de nuestras cosechas.
+    </p>
+
+    <div class="contact-info">
+      <div class="contact-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>Calle Los Viñedos 123, Ica, Perú</span>
+      </div>
+      <div class="contact-item">
+        <i class="fas fa-phone"></i>
+        <span>+51 987 654 321</span>
+      </div>
+      <div class="contact-item">
+        <i class="fas fa-envelope"></i>
+        <span>contacto@bodegashub.com</span>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
