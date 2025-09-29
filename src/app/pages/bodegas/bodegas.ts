@@ -1,30 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { BodegasService } from '../../services/bodegas';
 import { Bodega } from '../../../interfaces/bodega';
 
 @Component({
   selector: 'app-bodegas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './bodegas.html',
   styleUrls: ['./bodegas.css']
 })
 export class BodegasComponent implements OnInit {
   bodegas: Bodega[] = [];
-  mostrarModal: boolean = false;
-
-  nuevaBodega: Bodega = {
-    nombre: '',
-    direccion: '',
-    propietario: '',
-    descripcion: '',
-    telefono: '',
-    correo: '',
-    ubicacionMaps: '',
-    imagenLogo: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' // Imagen por defecto
-  };
+  loading: boolean = true;
+  error: string = '';
 
   constructor(private bodegasService: BodegasService) {}
 
@@ -33,47 +23,18 @@ export class BodegasComponent implements OnInit {
   }
 
   cargarBodegas(): void {
+    this.loading = true;
     this.bodegasService.getBodegas().subscribe({
       next: (bodegas: Bodega[]) => {
         this.bodegas = bodegas;
+        this.loading = false;
+        console.log('Bodegas cargadas:', bodegas);
       },
       error: (error: any) => {
         console.error('Error al cargar bodegas:', error);
+        this.error = 'Error al cargar las bodegas. Verifica que el backend esté corriendo.';
+        this.loading = false;
       }
     });
-  }
-
-  abrirModal(): void {
-    this.mostrarModal = true;
-  }
-
-  cerrarModal(): void {
-    this.mostrarModal = false;
-    this.resetFormulario();
-  }
-
-  crearBodega(): void {
-    this.bodegasService.createBodega(this.nuevaBodega).subscribe({
-      next: (bodegaCreada: Bodega) => {
-        this.bodegas.push(bodegaCreada);
-        this.cerrarModal();
-      },
-      error: (error: any) => {
-        console.error('Error al crear bodega:', error);
-      }
-    });
-  }
-
-  private resetFormulario(): void {
-    this.nuevaBodega = {
-      nombre: '',
-      direccion: '',
-      propietario: '',
-      descripcion: '',
-      telefono: '',
-      correo: '',
-      ubicacionMaps: '',
-      imagenLogo: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-    };
   }
 }

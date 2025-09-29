@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
 import { BodegasComponent } from './pages/bodegas/bodegas';
-import { InicioComponent } from './pages/inicio/inicio'; // Asegúrate de tener este componente
+import { InicioComponent } from './pages/inicio/inicio';
+import { CatalogoComponent } from './pages/catalogo/catalogo';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
   { path: 'inicio', component: InicioComponent },
   { path: 'bodegas', component: BodegasComponent },
+  { path: 'catalogo', component: CatalogoComponent },
   { path: '', loadComponent: () => import('./pages/inicio/inicio').then(m => m.InicioComponent) },
   { path: 'catalogo', loadComponent: () => import('./pages/catalogo/catalogo').then(m => m.CatalogoComponent) },
   { path: 'bodegas', loadComponent: () => import('./pages/bodegas/bodegas').then(m => m.BodegasComponent) },

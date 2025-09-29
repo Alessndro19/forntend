@@ -4,7 +4,7 @@ import { CommonModule, NgFor, NgClass } from '@angular/common';
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [CommonModule, NgFor, NgClass],
+  imports: [CommonModule],
   templateUrl: './inicio.html',
   styleUrls: ['./inicio.css']
 })

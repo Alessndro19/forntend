@@ -1,18 +1,203 @@
-<p>catalogo works!</p>
-<div class="container py-4">
-  <h2 class="mb-4">Catálogo</h2>
+<div class="catalogo-page">
+  <!-- Banner Superior -->
+  <section class="banner-section">
+    <div class="banner-overlay">
+      <div class="content-wrapper">
+        <h1 class="main-title">Descubre Nuestros Vinos Exclusivos</h1>
 
-  <div class="row g-3">x|
-    <div class="col-6 col-md-4 col-lg-3" *ngFor="let p of productos">
-      <div class="card h-100 shadow-sm">
-        <div class="ratio ratio-1x1 bg-light"></div>
-        <div class="card-body">
-          <h6 class="card-title mb-1">{{ p.nombre }}</h6>
-          <small class="text-muted d-block mb-2">★ {{ p.rating }} / 5</small>
-          <div class="fw-semibold mb-2">{{ p.precio | currency:'PEN':'symbol':'1.2-2' }}</div>
-          <button class="btn btn-dark btn-sm w-100" (click)="addToCart(p)">Agregar</button>
+        <p class="banner-description">
+          Explica su pasión y pérdida de Boccalo. La Altaño, Vinos y pisos del Tunnel se califica el argumento de masa coctipalpa o tu mesa.
+        </p>
+
+        <!-- Barra de búsqueda -->
+        <div class="search-container">
+          <input type="text"
+                 [(ngModel)]="filtros.search"
+                 (input)="aplicarFiltros()"
+                 placeholder="Buscar vinos, piscos..."
+                 class="search-input">
+          <i class="fas fa-search search-icon"></i>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Separación entre secciones -->
+  <div class="section-separator"></div>
+
+  <!-- Contenido Principal del Catálogo -->
+  <section class="catalogo-content-section">
+    <div class="content-wrapper">
+      <div class="catalogo-layout">
+        <!-- Sidebar de Filtros -->
+        <aside class="filters-sidebar">
+          <div class="filters-header">
+            <h2 class="filters-title">EXPLORAR</h2>
+            <button class="btn-limpiar" (click)="limpiarFiltros()">
+              Limpiar
+            </button>
+          </div>
+
+          <!-- Categorías -->
+          <div class="filter-group">
+            <h3 class="filter-group-title">Categorías</h3>
+            <div class="filter-options">
+              <label *ngFor="let categoria of categorias" class="filter-option">
+                <input type="radio"
+                       name="categoria"
+                       [value]="categoria"
+                       [(ngModel)]="filtros.categoria"
+                       (change)="aplicarFiltros()">
+                <span class="checkmark"></span>
+                <span class="filter-text">
+                  {{ categoria === 'todos' ? 'Todos los Vinos' : categoria }}
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Precio -->
+          <div class="filter-group">
+            <h3 class="filter-group-title">Precio</h3>
+            <div class="filter-options">
+              <label *ngFor="let precio of precios" class="filter-option">
+                <input type="radio"
+                       name="precio"
+                       [value]="precio"
+                       [(ngModel)]="filtros.precio"
+                       (change)="aplicarFiltros()">
+                <span class="checkmark"></span>
+                <span class="filter-text">
+                  {{ precio === 'todos' ? 'Todos los precios' : precio }}
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Marca -->
+          <div class="filter-group">
+            <h3 class="filter-group-title">Marca</h3>
+            <div class="filter-options">
+              <label *ngFor="let marca of marcas" class="filter-option">
+                <input type="radio"
+                       name="marca"
+                       [value]="marca"
+                       [(ngModel)]="filtros.marca"
+                       (change)="aplicarFiltros()">
+                <span class="checkmark"></span>
+                <span class="filter-text">
+                  {{ marca === 'todos' ? 'Todas las marcas' : marca }}
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tipo de Uva -->
+          <div class="filter-group">
+            <h3 class="filter-group-title">Tipo de Uva</h3>
+            <div class="filter-options">
+              <label *ngFor="let tipoUva of tiposUva" class="filter-option">
+                <input type="radio"
+                       name="tipoUva"
+                       [value]="tipoUva"
+                       [(ngModel)]="filtros.tipoUva"
+                       (change)="aplicarFiltros()">
+                <span class="checkmark"></span>
+                <span class="filter-text">
+                  {{ tipoUva === 'todos' ? 'Todos los tipos' : tipoUva }}
+                </span>
+              </label>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Contenido Principal de Productos -->
+        <main class="products-main">
+          <!-- Información de resultados -->
+          <div class="results-info">
+            <p>{{ productosFiltrados.length }} productos encontrados</p>
+          </div>
+
+          <!-- Estado de carga -->
+          <div *ngIf="loading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Cargando productos...</p>
+          </div>
+
+          <!-- Grid de Productos -->
+          <div *ngIf="!loading" class="products-grid">
+            <div *ngFor="let producto of productosFiltrados" class="product-card">
+              <!-- Badge de oferta -->
+              <div *ngIf="producto.enOferta" class="product-badge oferta">
+                -{{ calcularDescuento(producto) }}%
+              </div>
+
+              <div class="product-image">
+                <img [src]="producto.imagenUrl"
+                     [alt]="producto.nombre"
+                     class="product-img">
+                <div class="product-actions">
+                  <button class="btn-action btn-favorite">
+                    <i class="far fa-heart"></i>
+                  </button>
+                  <button class="btn-action btn-view">
+                    <i class="far fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="product-content">
+                <div class="product-category">{{ producto.categoria }}</div>
+                <h3 class="product-name">{{ producto.nombre }}</h3>
+
+                <!-- Calificación con estrellas -->
+                <div class="product-rating">
+                  <div class="stars">
+                    <span *ngFor="let star of generarEstrellas(producto.calificacion)"
+                          class="star" [class.filled]="star === 1">
+                      ★
+                    </span>
+                  </div>
+                  <span class="rating-value">({{ producto.calificacion }}.0)</span>
+                </div>
+
+                <div class="product-details">
+                  <span class="product-code">{{ producto.codigo }}</span>
+                  <span class="product-age">{{ producto.aniosCosecha }}</span>
+                </div>
+
+                <div class="product-bodega">{{ producto.bodega || producto.marca }}</div>
+
+                <div class="product-pricing">
+                  <span class="product-price">S/ {{ producto.precio }}</span>
+                  <span *ngIf="producto.precioOriginal" class="product-price-original">
+                    S/ {{ producto.precioOriginal }}
+                  </span>
+                </div>
+
+                <div class="product-stock" [class.low-stock]="producto.stock < 10">
+                  {{ producto.stock > 0 ? (producto.stock < 10 ? 'Últimas unidades' : 'En stock') : 'Agotado' }}
+                </div>
+
+                <button class="btn-add-cart" [disabled]="producto.stock === 0">
+                  <i class="fas fa-shopping-cart"></i>
+                  Añadir al Carrito
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sin resultados -->
+          <div *ngIf="!loading && productosFiltrados.length === 0" class="no-results">
+            <i class="fas fa-search"></i>
+            <h3>No se encontraron productos</h3>
+            <p>Intenta ajustar los filtros para ver más resultados.</p>
+            <button class="btn-limpiar-filtros" (click)="limpiarFiltros()">
+              Mostrar todos los productos
+            </button>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
 </div>
