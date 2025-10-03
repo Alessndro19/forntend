@@ -2,15 +2,15 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { ProductosService } from '../../services/productos';
-import { Producto } from '../../../interfaces/producto';
-import { Filtros } from '../../../interfaces/filtros';
+import { Producto, Filtros } from '../../../interfaces/producto';
 
 @Component({
   selector: 'app-catalogo',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, HttpClientModule],
   templateUrl: './catalogo.html',
   styleUrls: ['./catalogo.css']
 })
@@ -56,6 +56,7 @@ export class CatalogoComponent implements OnInit, OnDestroy {
   paginaActual: number = 1;
   productosPorPagina: number = 12;
   totalPaginas: number = 1;
+  totalProductos: number = 0;
 
   constructor(private productosService: ProductosService) {}
 
@@ -88,6 +89,7 @@ export class CatalogoComponent implements OnInit, OnDestroy {
         this.productos = productos;
         this.productosFiltrados = productos;
         this.extraerOpcionesFiltros();
+        this.calcularPaginacion();
         this.loading = false;
       },
       error: (error: any) => {
@@ -114,7 +116,7 @@ export class CatalogoComponent implements OnInit, OnDestroy {
     if (this.productos && this.productos.length > 0) {
       this.categorias = ['todos', ...new Set(this.productos.map(p => p.categoria).filter(Boolean))];
       this.marcas = ['todos', ...new Set(this.productos.map(p => p.marca).filter(Boolean))];
-      this.tiposUva = ['todos', ...new Set(this.productos.map(p => p.tipoUva).filter(Boolean))];
+      this.tiposUva = ['todos', ...new Set(this.productos.map(p => p.tipoUva).filter((v): v is string => Boolean(v)))];
       this.bodegas = ['todos', ...new Set(this.productos.map(p => p.bodega).filter(Boolean))];
     }
   }
@@ -193,7 +195,7 @@ export class CatalogoComponent implements OnInit, OnDestroy {
       case 'calificacion':
         return productos.sort((a, b) => (b.calificacion || 0) - (a.calificacion || 0));
       case 'mas_vendidos':
-        // Ordenar por stock (como proxy de más vendidos) - puedes ajustar esto según tu lógica de negocio
+        // Ordenar por stock (como proxy de más vendidos)
         return productos.sort((a, b) => b.stock - a.stock);
       case 'nombre':
       default:
@@ -228,8 +230,9 @@ export class CatalogoComponent implements OnInit, OnDestroy {
   }
 
   private calcularPaginacion(): void {
-    this.totalPaginas = Math.ceil(this.productosFiltrados.length / this.productosPorPagina);
-    if (this.paginaActual > this.totalPaginas) {
+    this.totalProductos = this.productosFiltrados.length;
+    this.totalPaginas = Math.ceil(this.totalProductos / this.productosPorPagina);
+    if (this.paginaActual > this.totalPaginas && this.totalPaginas > 0) {
       this.paginaActual = 1;
     }
   }
@@ -239,7 +242,7 @@ export class CatalogoComponent implements OnInit, OnDestroy {
   }
 
   calcularDescuento(producto: Producto): number {
-    if (producto.enOferta && producto.precioOriginal) {
+    if (producto.enOferta && producto.precioOriginal && producto.precioOriginal > producto.precio) {
       return Math.round(((producto.precioOriginal - producto.precio) / producto.precioOriginal) * 100);
     }
     return 0;
