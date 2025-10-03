@@ -1,123 +1,278 @@
 <div class="bodegas-page">
-  <!-- Banner Superior -->
-  <section class="banner-section">
-    <div class="banner-overlay">
-      <div class="content-wrapper">
-        <h1 class="main-title">Descubre Nuestras Bodegas Asociadas</h1>
+  <!-- Banner Superior Hero -->
+  <section class="banner-section bg-dark position-relative overflow-hidden">
+    <div class="container-fluid px-0">
+      <div class="row g-0">
+        <div class="col-12">
+          <div class="banner-overlay position-absolute w-100 h-100"></div>
+          <div class="position-relative min-vh-100 d-flex align-items-center justify-content-center text-white text-center">
+            <div class="container">
+              <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                  <h1 class="display-2 fw-bold mb-4">
+                    Descubre Nuestras Bodegas Asociadas
+                  </h1>
 
-        <p class="banner-description">
-          Esquece la nación y también de Bodegas (ca Alianza) en el proceso del canal,<br>
-          al cabo en directamente de nuestros vínedos a UNITA.
+                  <p class="lead fs-4 mb-5">
+                    Conectamos las mejores bodegas del Perú con amantes del vino<br>
+                    a través de nuestra plataforma integral.
+                  </p>
+
+                  <div class="d-grid gap-3 d-md-flex justify-content-md-center">
+                    <button class="btn btn-outline-light btn-lg px-5 py-3 fw-semibold border-2"
+                            routerLink="/catalogo">
+                      <i class="fas fa-shopping-cart me-2"></i>
+                      EXPLORAR CATÁLOGO
+                    </button>
+                    <button class="btn btn-primary btn-lg px-5 py-3 fw-semibold"
+                            (click)="scrollToBodegas()">
+                      <i class="fas fa-warehouse me-2"></i>
+                      VER BODEGAS
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Separador Decorativo -->
+  <div class="section-separator bg-gradient"></div>
+
+  <!-- Sección de Información -->
+  <section class="info-section py-5 bg-light">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <div class="pe-lg-5">
+            <span class="badge bg-primary mb-3 fs-6 px-3 py-2">PLATAFORMA BODEGAHUB</span>
+            <h2 class="display-5 fw-bold text-dark mb-4">
+              Conectando Bodegas con el Mundo
+            </h2>
+
+            <p class="fs-5 text-muted mb-4 lh-lg">
+              BodegaHub es la plataforma líder que une a productores vitivinícolas
+              con entusiastas del vino. Desde pequeñas bodegas familiares hasta
+              grandes productores, todas encuentran su espacio en nuestra comunidad.
+            </p>
+
+            <div class="stats-container row g-4 text-center">
+              <div class="col-6 col-md-3">
+                <div class="stat-item">
+                  <h3 class="text-primary fw-bold">{{ totalBodegas }}+</h3>
+                  <p class="text-muted mb-0">Bodegas Registradas</p>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="stat-item">
+                  <h3 class="text-primary fw-bold">24/7</h3>
+                  <p class="text-muted mb-0">Disponible</p>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="stat-item">
+                  <h3 class="text-primary fw-bold">100%</h3>
+                  <p class="text-muted mb-0">Verificadas</p>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="stat-item">
+                  <h3 class="text-primary fw-bold">★ 4.9</h3>
+                  <p class="text-muted mb-0">Rating</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="position-relative">
+            <img src="https://images.unsplash.com/photo-1568213816046-0ee1c42bd559?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80"
+                 alt="Viñedos peruanos"
+                 class="img-fluid rounded-3 shadow-lg">
+            <div class="position-absolute top-0 start-0 m-4">
+              <span class="badge bg-dark fs-6 px-3 py-2">
+                <i class="fas fa-shield-alt me-2"></i>
+                Plataforma Segura
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Bodegas desde Base de Datos -->
+  <section class="bodegas-reales-section py-5 bg-white" id="bodegas-reales">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="badge bg-primary mb-3 fs-6 px-3 py-2">BODEGAS REGISTRADAS</span>
+        <h2 class="display-4 fw-bold text-dark mb-3">
+          Nuestras Bodegas Asociadas
+        </h2>
+        <p class="lead text-muted mx-auto" style="max-width: 600px;">
+          Explora nuestra red de bodegas verificadas, cada una con su identidad única y compromiso con la calidad.
         </p>
 
-        <div class="button-container">
-          <button class="comprar-btn" routerLink="/catalogo">
-            COMPRAR AHORA
+        <!-- Barra de búsqueda -->
+        <div class="row justify-content-center mb-4">
+          <div class="col-md-6">
+            <div class="input-group">
+              <input type="text"
+                     class="form-control form-control-lg"
+                     placeholder="Buscar bodega por nombre..."
+                     #searchInput
+                     (keyup.enter)="buscarBodegas(searchInput.value)">
+              <button class="btn btn-primary"
+                      type="button"
+                      (click)="buscarBodegas(searchInput.value)">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado de carga -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Cargando bodegas...</span>
+        </div>
+        <p class="mt-3 fs-5 text-muted">Cargando nuestras bodegas asociadas...</p>
+      </div>
+
+      <!-- Mensaje de error -->
+      <div *ngIf="error && !loading" class="alert alert-danger text-center mx-auto" style="max-width: 500px;">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ error }}
+        <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadBodegas()">
+          <i class="fas fa-redo me-1"></i> Reintentar
+        </button>
+      </div>
+
+      <!-- Grid de bodegas -->
+      <div *ngIf="!loading && bodegas.length > 0" class="row g-4">
+        <div *ngFor="let bodega of bodegas" class="col-xl-4 col-lg-6 col-md-6">
+          <div class="card h-100 border-0 shadow-sm hover-card">
+            <div class="position-relative overflow-hidden">
+              <img [src]="bodega.imagenLogo || 'assets/images/bodega-default.jpg'"
+                   [alt]="bodega.nombre"
+                   class="card-img-top bodega-image"
+                   (error)="bodega.imagenLogo = 'assets/images/bodega-default.jpg'">
+              <div class="position-absolute top-0 end-0 m-3">
+                <span class="badge bg-success fs-7">
+                  <i class="fas fa-check-circle me-1"></i>
+                  Verificada
+                </span>
+              </div>
+              <div *ngIf="bodega.fechaRegistro" class="position-absolute bottom-0 start-0 m-3">
+                <span class="badge bg-dark bg-opacity-75 fs-7">
+                  <i class="fas fa-calendar me-1"></i>
+                  {{ formatFecha(bodega.fechaRegistro) }}
+                </span>
+              </div>
+            </div>
+
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold text-dark mb-3">{{ bodega.nombre }}</h5>
+
+              <p class="card-text text-muted flex-grow-1 mb-4">
+                {{ bodega.descripcion || 'Bodega registrada en nuestra plataforma con compromiso de calidad y tradición vinícola.' }}
+              </p>
+
+              <div class="bodega-info mb-4">
+                <div class="d-flex align-items-center mb-2" *ngIf="bodega.propietario">
+                  <i class="fas fa-user text-primary me-2"></i>
+                  <small class="text-muted">{{ bodega.propietario }}</small>
+                </div>
+                <div class="d-flex align-items-center mb-2" *ngIf="bodega.direccion">
+                  <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                  <small class="text-muted">{{ bodega.direccion }}</small>
+                </div>
+                <div class="d-flex align-items-center mb-2" *ngIf="bodega.telefono">
+                  <i class="fas fa-phone text-success me-2"></i>
+                  <small class="text-muted">{{ bodega.telefono }}</small>
+                </div>
+                <div class="d-flex align-items-center" *ngIf="bodega.correo">
+                  <i class="fas fa-envelope text-warning me-2"></i>
+                  <small class="text-muted">{{ bodega.correo }}</small>
+                </div>
+              </div>
+
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-auto">
+                <a *ngIf="bodega.ubicacionMaps"
+                   [href]="bodega.ubicacionMaps"
+                   target="_blank"
+                   class="btn btn-outline-primary btn-sm">
+                  <i class="fas fa-map-marked-alt me-1"></i>
+                  Ubicación
+                </a>
+                <button class="btn btn-primary btn-sm" [routerLink]="['/bodega', bodega.idBodega]">
+                  <i class="fas fa-eye me-1"></i>
+                  Ver Detalles
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paginación -->
+      <div *ngIf="!loading && bodegas.length > 0 && totalPages > 1" class="row mt-5">
+        <div class="col-12">
+          <nav aria-label="Paginación de bodegas">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="currentPage === 0">
+                <a class="page-link" href="javascript:void(0)" (click)="prevPage()">
+                  <i class="fas fa-chevron-left"></i> Anterior
+                </a>
+              </li>
+              <li class="page-item disabled">
+                <span class="page-link">
+                  Página {{ currentPage + 1 }} de {{ totalPages }}
+                </span>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                <a class="page-link" href="javascript:void(0)" (click)="nextPage()">
+                  Siguiente <i class="fas fa-chevron-right"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Mensaje cuando no hay bodegas -->
+      <div *ngIf="!loading && bodegas.length === 0 && !error" class="text-center py-5">
+        <div class="empty-state">
+          <i class="fas fa-warehouse fa-3x text-muted mb-3"></i>
+          <h4 class="text-muted mb-3">No hay bodegas registradas</h4>
+          <p class="text-muted mb-4">Sé el primero en registrar tu bodega en nuestra plataforma.</p>
+          <button class="btn btn-primary" routerLink="/registro-bodega">
+            <i class="fas fa-plus me-2"></i>
+            Registrar Bodega
           </button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Separación visual entre secciones -->
-  <div class="section-separator"></div>
-
-  <!-- Sección Inferior con imagen al costado -->
-  <section class="info-section">
-    <div class="content-wrapper">
-      <div class="info-grid">
-        <!-- Columna de texto -->
-        <div class="text-column">
-          <h2 class="section-title">Nuestra Herencia Vitivinícola</h2>
-
-          <p class="info-text">
-            Bodegas (ca Alianza es el resultado de generaciones dedicadas al arte de cultivar la vid y producir vinos y piscos de carácter único. Situados en el corazón del valle de Ica, nuestros vínedos se benefician de un clima excepcional que da vida a cada una de nuestras cosechas.
-          </p>
-
-          <div class="contact-container">
-            <div class="contact-item">
-              <span class="contact-icon">[ ]</span>
-              <span>Calle Los Víñedos 123, Ica, Perú</span>
-            </div>
-            <div class="contact-item">
-              <span class="contact-icon">[x]</span>
-              <span>+51 987 654 321</span>
-            </div>
-            <div class="contact-item">
-              <span class="contact-icon">[ ]</span>
-              <span>contacto@bodegashub.com</span>
-            </div>
-          </div>
+  <!-- CTA Section -->
+  <section class="cta-section py-5 bg-primary text-white">
+    <div class="container">
+      <div class="row align-items-center text-center text-lg-start">
+        <div class="col-lg-8">
+          <h3 class="display-6 fw-bold mb-3">¿Tienes una bodega?</h3>
+          <p class="lead mb-0">Únete a nuestra plataforma y expande el alcance de tus productos.</p>
         </div>
-
-        <!-- Columna de imagen -->
-        <div class="image-column">
-          <img src="https://images.unsplash.com/photo-1568213816046-0ee1c42bd559?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80"
-               alt="Viñedos de Ica"
-               class="info-image">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECCIÓN NUEVA: Bodegas desde la Base de Datos -->
-  <section class="bodegas-reales-section" *ngIf="bodegas.length > 0">
-    <div class="content-wrapper">
-      <h2 class="bodegas-reales-title">Nuestras Bodegas Registradas</h2>
-
-      <!-- Estado de carga -->
-      <div *ngIf="loading" class="loading-message">
-        <p>Cargando bodegas...</p>
-      </div>
-
-      <!-- Mensaje de error -->
-      <div *ngIf="error && !loading" class="error-message">
-        <p>{{ error }}</p>
-      </div>
-
-      <!-- Grid de bodegas reales -->
-      <div class="bodegas-reales-grid">
-        <div *ngFor="let bodega of bodegas" class="bodega-real-card">
-          <div class="bodega-real-image">
-            <img [src]="bodega.imagenLogo || 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'"
-                 [alt]="bodega.nombre"
-                 class="bodega-real-img">
-          </div>
-          <div class="bodega-real-content">
-            <h3>{{ bodega.nombre }}</h3>
-            <p class="bodega-real-descripcion">{{ bodega.descripcion || 'Bodega con tradición y calidad.' }}</p>
-
-            <div class="bodega-real-info">
-              <div class="info-item-real">
-                <i class="fas fa-user"></i>
-                <span>{{ bodega.propietario }}</span>
-              </div>
-              <div class="info-item-real">
-                <i class="fas fa-map-marker-alt"></i>
-                <span>{{ bodega.direccion }}</span>
-              </div>
-              <div class="info-item-real">
-                <i class="fas fa-phone"></i>
-                <span>{{ bodega.telefono }}</span>
-              </div>
-              <div class="info-item-real">
-                <i class="fas fa-envelope"></i>
-                <span>{{ bodega.correo }}</span>
-              </div>
-            </div>
-
-            <div class="bodega-real-actions">
-              <a *ngIf="bodega.ubicacionMaps"
-                 [href]="bodega.ubicacionMaps"
-                 target="_blank"
-                 class="btn-mapa-real">
-                <i class="fas fa-map-marker-alt"></i> Ver Mapa
-              </a>
-              <button class="btn-contactar-real">
-                <i class="fas fa-wine-bottle"></i> Productos
-              </button>
-            </div>
-          </div>
+        <div class="col-lg-4 text-lg-end">
+          <button class="btn btn-light btn-lg px-4 py-2 fw-semibold" routerLink="/registro-bodega">
+            <i class="fas fa-store me-2"></i>
+            Registrar Bodega
+          </button>
         </div>
       </div>
     </div>

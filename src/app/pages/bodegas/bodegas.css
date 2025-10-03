@@ -1,565 +1,119 @@
+/* Estilos personalizados para la página de bodegas */
 .bodegas-page {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  color: #333;
-  line-height: 1.6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Banner Section */
 .banner-section {
-  background: linear-gradient(rgba(44, 24, 16, 0.85), rgba(44, 24, 16, 0.85)),
-              url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+  background: linear-gradient(rgba(44, 24, 16, 0.9), rgba(44, 24, 16, 0.9)),
+              url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  color: white;
-  text-align: center;
-  padding: 160px 20px; /* Más padding para mayor altura */
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .banner-overlay {
-  width: 100%;
-  max-width: 1200px;
+  background: linear-gradient(135deg, rgba(139, 0, 0, 0.8) 0%, rgba(44, 24, 16, 0.9) 100%);
 }
 
-.content-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.main-title {
-  font-size: 48px;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 40px;
-  line-height: 1.2;
-}
-
-.banner-description {
-  font-size: 20px;
-  margin-bottom: 80px;
-  line-height: 1.8;
-  opacity: 0.9;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Botón COMPRAR AHORA */
-.button-container {
-  margin: 60px 0;
-}
-
-.comprar-btn {
-  background: transparent;
-  color: white;
-  border: 3px solid white;
-  padding: 20px 60px;
-  font-size: 22px;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.comprar-btn:hover {
-  background: white;
-  color: #2c1810;
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-}
-
-/* Separación entre secciones - MÁS NOTABLE */
+/* Separador con gradiente */
 .section-separator {
-  height: 120px; /* Separación muy notable */
-  background: linear-gradient(to bottom, #2c1810, #f8f8f8);
-  width: 100%;
+  height: 80px;
+  background: linear-gradient(135deg, #8B0000 0%, #2c1810 50%, #f8f9fa 100%);
 }
 
-/* Info Section con imagen al costado */
-.info-section {
-  background: #f8f8f8;
-  color: #333;
-  padding: 100px 0;
+/* Cards con efecto hover */
+.hover-card {
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
 }
 
-.info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
+.hover-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+  border-color: #8B0000;
 }
 
-.text-column {
-  padding-right: 40px;
-}
-
-.section-title {
-  font-size: 36px;
-  font-weight: bold;
-  margin-bottom: 50px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #2c1810;
-}
-
-.info-text {
-  font-size: 18px;
-  line-height: 1.8;
-  margin-bottom: 50px;
-  color: #555;
-}
-
-.contact-container {
-  text-align: left;
-}
-
-.contact-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 25px;
-  font-size: 18px;
-  padding: 12px 0;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.contact-item:last-child {
-  border-bottom: none;
-}
-
-.contact-icon {
-  display: inline-block;
-  width: 28px;
-  height: 28px;
-  border: 2px solid #2c1810;
-  margin-right: 20px;
-  text-align: center;
-  line-height: 24px;
-  font-size: 14px;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-
-/* Columna de imagen */
-.image-column {
-  position: relative;
-}
-
-.info-image {
-  width: 100%;
-  height: 500px;
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-  transition: transform 0.3s ease;
-}
-
-.info-image:hover {
-  transform: scale(1.02);
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .info-grid {
-    gap: 60px;
-  }
-
-  .main-title {
-    font-size: 42px;
-  }
-
-  .comprar-btn {
-    padding: 18px 50px;
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .banner-section {
-    padding: 120px 20px;
-    background-attachment: scroll;
-  }
-
-  .main-title {
-    font-size: 36px;
-  }
-
-  .banner-description {
-    font-size: 18px;
-    margin-bottom: 60px;
-  }
-
-  .comprar-btn {
-    padding: 16px 40px;
-    font-size: 18px;
-  }
-
-  .section-separator {
-    height: 80px;
-  }
-
-  .info-section {
-    padding: 80px 0;
-  }
-
-  .info-grid {
-    grid-template-columns: 1fr;
-    gap: 50px;
-  }
-
-  .text-column {
-    padding-right: 0;
-    order: 2;
-  }
-
-  .image-column {
-    order: 1;
-  }
-
-  .info-image {
-    height: 400px;
-  }
-
-  .section-title {
-    font-size: 32px;
-    text-align: center;
-  }
-
-  .contact-container {
-    text-align: center;
-  }
-
-  .contact-item {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .banner-section {
-    padding: 100px 20px;
-  }
-
-  .main-title {
-    font-size: 28px;
-  }
-
-  .banner-description {
-    font-size: 16px;
-  }
-
-  .comprar-btn {
-    padding: 14px 30px;
-    font-size: 16px;
-  }
-
-  .section-separator {
-    height: 60px;
-  }
-
-  .info-section {
-    padding: 60px 0;
-  }
-
-  .section-title {
-    font-size: 28px;
-  }
-
-  .info-text {
-    font-size: 16px;
-  }
-
-  .contact-item {
-    font-size: 16px;
-  }
-
-  .info-image {
-    height: 300px;
-  }
-}
-
-
-/***/
-/* Sección de Bodegas desde la Base de Datos */
-.bodegas-db-section {
-  background: white;
-  padding: 100px 0;
-}
-
-.bodegas-db-title {
-  font-size: 36px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 60px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #2c1810;
-}
-
-.bodegas-db-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-}
-
-.bodega-db-card {
-  background: #f8f8f8;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.bodega-db-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-
-.bodega-db-image {
+/* Imágenes de bodegas */
+.bodega-image {
   height: 200px;
-  overflow: hidden;
-}
-
-.bodega-db-image img {
-  width: 100%;
-  height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.bodega-db-card:hover .bodega-db-image img {
+.hover-card:hover .bodega-image {
   transform: scale(1.05);
 }
 
-.bodega-db-content {
-  padding: 20px;
-}
-
-.bodega-db-content h3 {
-  color: #2c1810;
-  margin-bottom: 10px;
-  font-size: 1.5rem;
-}
-
-.bodega-db-description {
-  color: #666;
-  line-height: 1.5;
-  margin-bottom: 15px;
-}
-
-.bodega-db-info {
-  margin-bottom: 15px;
-}
-
-.bodega-db-info p {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-  font-size: 0.9rem;
-  color: #333;
-}
-
-.bodega-db-info i {
-  color: #8B0000;
-  width: 16px;
-  margin-right: 8px;
-}
-
-.btn-mapa {
-  display: inline-block;
-  background: #8B0000;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: background 0.3s ease;
-}
-
-.btn-mapa:hover {
-  background: #A52A2A;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .bodegas-db-section {
-    padding: 60px 0;
-  }
-
-  .bodegas-db-title {
-    font-size: 28px;
-  }
-
-  .bodegas-db-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* Sección de Bodegas Reales desde la Base de Datos */
-.bodegas-reales-section {
-  background: white;
-  padding: 100px 0;
-}
-
-.bodegas-reales-title {
-  font-size: 36px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 60px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #2c1810;
-}
-
-.loading-message, .error-message {
-  text-align: center;
-  padding: 40px;
-  font-size: 18px;
-}
-
-.error-message {
-  color: #d32f2f;
-  background: #ffebee;
-  border-radius: 8px;
-  margin: 20px 0;
-}
-
-.bodegas-reales-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  margin-top: 40px;
-}
-
-.bodega-real-card {
-  background: #f8f8f8;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.bodega-real-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-}
-
-.bodega-real-image {
-  height: 200px;
-  overflow: hidden;
-}
-
-.bodega-real-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* Icon wrapper para contactos */
+.icon-wrapper {
   transition: transform 0.3s ease;
 }
 
-.bodega-real-card:hover .bodega-real-img {
+.icon-wrapper:hover {
   transform: scale(1.1);
 }
 
-.bodega-real-content {
-  padding: 25px;
+/* Animaciones */
+.animate__animated {
+  animation-duration: 1s;
 }
 
-.bodega-real-content h3 {
-  color: #2c1810;
-  margin-bottom: 15px;
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.bodega-real-descripcion {
-  color: #666;
-  line-height: 1.5;
-  margin-bottom: 20px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.bodega-real-info {
-  margin-bottom: 20px;
-}
-
-.info-item-real {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-  color: #333;
-  font-size: 0.9rem;
-}
-
-.info-item-real i {
-  color: #8B0000;
-  width: 16px;
-  margin-right: 10px;
-}
-
-.bodega-real-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.btn-mapa-real, .btn-contactar-real {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.btn-mapa-real {
-  background: #e9ecef;
-  color: #333;
-}
-
-.btn-contactar-real {
-  background: #8B0000;
-  color: white;
-}
-
-.btn-mapa-real:hover {
-  background: #dee2e6;
-}
-
-.btn-contactar-real:hover {
-  background: #A52A2A;
-}
-
-/* Responsive para bodegas reales */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .bodegas-reales-section {
-    padding: 60px 0;
+  .banner-section {
+    background-attachment: scroll;
   }
 
-  .bodegas-reales-title {
-    font-size: 28px;
-    margin-bottom: 40px;
+  .display-2 {
+    font-size: 2.5rem;
   }
 
-  .bodegas-reales-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .display-4 {
+    font-size: 2rem;
   }
+
+  .display-5 {
+    font-size: 1.8rem;
+  }
+
+  .display-6 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Empty state styling */
+.empty-state {
+  padding: 3rem 1rem;
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(135deg, #8B0000 0%, #2c1810 100%);
+}
+
+/* Badge personalizado */
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Botones personalizados */
+.btn-outline-light {
+  transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139, 0, 0, 0.3);
 }
