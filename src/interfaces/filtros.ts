@@ -4,4 +4,6 @@ export interface Filtros {
   marca: string;
   tipoUva: string;
   search: string;
+  ordenar: string;
+  bodega: string;
 }

@@ -1,0 +1,75 @@
+<!-- src/app/auth/login/login.component.html -->
+<div class="login-container">
+  <div class="row justify-content-center min-vh-100 align-items-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow border-0">
+        <div class="card-body p-5">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold text-primary">Iniciar Sesión</h2>
+            <p class="text-muted">Accede a tu cuenta de BodegaHub</p>
+          </div>
+
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- Email -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo Electrónico</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                formControlName="email"
+                placeholder="tu@email.com"
+                [class.is-invalid]="email?.invalid && email?.touched">
+              <div *ngIf="email?.errors?.['required'] && email?.touched" class="invalid-feedback">
+                El email es requerido
+              </div>
+              <div *ngIf="email?.errors?.['email'] && email?.touched" class="invalid-feedback">
+                Ingresa un email válido
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+              <label for="password" class="form-label">Contraseña</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                placeholder="••••••••"
+                [class.is-invalid]="password?.invalid && password?.touched">
+              <div *ngIf="password?.errors?.['required'] && password?.touched" class="invalid-feedback">
+                La contraseña es requerida
+              </div>
+              <div *ngIf="password?.errors?.['minlength'] && password?.touched" class="invalid-feedback">
+                Mínimo 6 caracteres
+              </div>
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+              {{ errorMessage }}
+              <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              class="btn btn-primary w-100 py-2"
+              [disabled]="loginForm.invalid || loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+            </button>
+          </form>
+
+          <div class="text-center mt-4">
+            <p class="mb-0">
+              ¿No tienes cuenta?
+              <a routerLink="/register" class="text-decoration-none">Regístrate aquí</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

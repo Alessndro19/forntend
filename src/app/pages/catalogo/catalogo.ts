@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { ProductosService } from '../../services/productos';
 import { Producto } from '../../../interfaces/producto';
 import { Filtros } from '../../../interfaces/filtros';
@@ -13,33 +14,71 @@ import { Filtros } from '../../../interfaces/filtros';
   templateUrl: './catalogo.html',
   styleUrls: ['./catalogo.css']
 })
-export class CatalogoComponent implements OnInit {
+export class CatalogoComponent implements OnInit, OnDestroy {
   productos: Producto[] = [];
   productosFiltrados: Producto[] = [];
   productosMasVendidos: Producto[] = [];
   loading: boolean = true;
   error: string = '';
 
-  // Filtros
+  // Búsqueda con debounce
+  private searchSubject = new Subject<string>();
+  private destroy$ = new Subject<void>();
+
+  // Filtros mejorados
   filtros: Filtros = {
     categoria: 'todos',
     precio: 'todos',
     marca: 'todos',
     tipoUva: 'todos',
-    search: ''
+    search: '',
+    ordenar: 'nombre',
+    bodega: 'todos'
   };
 
-  // Opciones de filtros
-  categorias = ['todos', 'Vinos Tintos', 'Vinos Blancos', 'Vinos Rosados', 'Vinos Espumosos', 'Piscos'];
+  // Opciones de filtros (ahora dinámicas)
+  categorias: string[] = [];
   precios = ['todos', 'Hasta S/ 50', 'S/ 50 - S/ 100', 'S/ 100 - S/ 200', 'Más de S/ 200'];
-  marcas = ['todos', 'Ica Alianza', 'Viña Octrojé', 'Tabernero', 'Queirodo'];
-  tiposUva = ['todos', 'Malibec', 'Cabernet Sauvignon', 'Italia', 'Quebranta', 'Torontel'];
+  marcas: string[] = [];
+  tiposUva: string[] = [];
+  bodegas: string[] = [];
+
+  // Opciones de ordenamiento
+  opcionesOrden = [
+    { valor: 'nombre', texto: 'Nombre A-Z' },
+    { valor: 'precio_asc', texto: 'Precio: Menor a Mayor' },
+    { valor: 'precio_desc', texto: 'Precio: Mayor a Menor' },
+    { valor: 'calificacion', texto: 'Mejor Calificados' },
+    { valor: 'mas_vendidos', texto: 'Más Vendidos' }
+  ];
+
+  // Paginación
+  paginaActual: number = 1;
+  productosPorPagina: number = 12;
+  totalPaginas: number = 1;
 
   constructor(private productosService: ProductosService) {}
 
   ngOnInit(): void {
+    this.configurarBusqueda();
     this.cargarProductos();
     this.cargarProductosMasVendidos();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private configurarBusqueda(): void {
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    ).subscribe(searchTerm => {
+      this.filtros.search = searchTerm;
+      this.aplicarFiltros();
+    });
   }
 
   cargarProductos(): void {
@@ -48,13 +87,13 @@ export class CatalogoComponent implements OnInit {
       next: (productos: Producto[]) => {
         this.productos = productos;
         this.productosFiltrados = productos;
+        this.extraerOpcionesFiltros();
         this.loading = false;
       },
       error: (error: any) => {
         console.error('Error al cargar productos:', error);
         this.error = 'Error al cargar los productos.';
         this.loading = false;
-        this.cargarDatosEjemplo();
       }
     });
   }
@@ -70,8 +109,25 @@ export class CatalogoComponent implements OnInit {
     });
   }
 
+  private extraerOpcionesFiltros(): void {
+    // Extraer opciones únicas de los productos cargados desde la base de datos
+    if (this.productos && this.productos.length > 0) {
+      this.categorias = ['todos', ...new Set(this.productos.map(p => p.categoria).filter(Boolean))];
+      this.marcas = ['todos', ...new Set(this.productos.map(p => p.marca).filter(Boolean))];
+      this.tiposUva = ['todos', ...new Set(this.productos.map(p => p.tipoUva).filter(Boolean))];
+      this.bodegas = ['todos', ...new Set(this.productos.map(p => p.bodega).filter(Boolean))];
+    }
+  }
+
+  onSearchInput(event: any): void {
+    this.searchSubject.next(event.target.value);
+  }
+
   aplicarFiltros(): void {
-    this.productosFiltrados = this.productos.filter(producto => {
+    let productosFiltrados = [...this.productos];
+
+    // Aplicar todos los filtros
+    productosFiltrados = productosFiltrados.filter(producto => {
       // Filtro por categoría
       if (this.filtros.categoria !== 'todos' && producto.categoria !== this.filtros.categoria) {
         return false;
@@ -106,6 +162,11 @@ export class CatalogoComponent implements OnInit {
         return false;
       }
 
+      // Filtro por bodega
+      if (this.filtros.bodega !== 'todos' && producto.bodega !== this.filtros.bodega) {
+        return false;
+      }
+
       // Filtro por búsqueda
       if (this.filtros.search &&
           !producto.nombre.toLowerCase().includes(this.filtros.search.toLowerCase()) &&
@@ -115,6 +176,29 @@ export class CatalogoComponent implements OnInit {
 
       return true;
     });
+
+    // Ordenar productos
+    productosFiltrados = this.ordenarProductos(productosFiltrados);
+
+    this.productosFiltrados = productosFiltrados;
+    this.calcularPaginacion();
+  }
+
+  private ordenarProductos(productos: Producto[]): Producto[] {
+    switch (this.filtros.ordenar) {
+      case 'precio_asc':
+        return productos.sort((a, b) => a.precio - b.precio);
+      case 'precio_desc':
+        return productos.sort((a, b) => b.precio - a.precio);
+      case 'calificacion':
+        return productos.sort((a, b) => (b.calificacion || 0) - (a.calificacion || 0));
+      case 'mas_vendidos':
+        // Ordenar por stock (como proxy de más vendidos) - puedes ajustar esto según tu lógica de negocio
+        return productos.sort((a, b) => b.stock - a.stock);
+      case 'nombre':
+      default:
+        return productos.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    }
   }
 
   limpiarFiltros(): void {
@@ -123,9 +207,31 @@ export class CatalogoComponent implements OnInit {
       precio: 'todos',
       marca: 'todos',
       tipoUva: 'todos',
-      search: ''
+      search: '',
+      ordenar: 'nombre',
+      bodega: 'todos'
     };
+    this.paginaActual = 1;
     this.productosFiltrados = this.productos;
+    this.calcularPaginacion();
+  }
+
+  cambiarPagina(pagina: number): void {
+    this.paginaActual = pagina;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  get productosPaginados(): Producto[] {
+    const inicio = (this.paginaActual - 1) * this.productosPorPagina;
+    const fin = inicio + this.productosPorPagina;
+    return this.productosFiltrados.slice(inicio, fin);
+  }
+
+  private calcularPaginacion(): void {
+    this.totalPaginas = Math.ceil(this.productosFiltrados.length / this.productosPorPagina);
+    if (this.paginaActual > this.totalPaginas) {
+      this.paginaActual = 1;
+    }
   }
 
   generarEstrellas(calificacion: number = 0): number[] {
@@ -137,112 +243,5 @@ export class CatalogoComponent implements OnInit {
       return Math.round(((producto.precioOriginal - producto.precio) / producto.precioOriginal) * 100);
     }
     return 0;
-  }
-
-  private cargarDatosEjemplo(): void {
-    this.productos = [
-      {
-        idProducto: 1,
-        idBodega: 1,
-        nombre: 'Vino Tinto Reserva',
-        descripcion: 'Vino tinto reserva con cuerpo y carácter único',
-        precio: 120.00,
-        precioOriginal: 150.00,
-        stock: 25,
-        codigoBarras: '1234567890123',
-        categoria: 'Vinos Tintos',
-        tipoUva: 'Malibec',
-        marca: 'Ica Alianza',
-        imagenUrl: 'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-        calificacion: 5,
-        aniosCosecha: '6:0:0:0 0:48',
-        codigo: '6:0:0:0 0:48',
-        bodega: 'Alice d\'Oro',
-        enOferta: true
-      },
-      {
-        idProducto: 2,
-        idBodega: 1,
-        nombre: 'Vino Rosado Dulce',
-        descripcion: 'Vino rosado dulce con aromas frutales intensos',
-        precio: 50.00,
-        stock: 40,
-        codigoBarras: '1234567890124',
-        categoria: 'Vinos Rosados',
-        tipoUva: 'Italia',
-        marca: 'Ica Alianza',
-        imagenUrl: 'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-        calificacion: 4,
-        aniosCosecha: 'Años 4 cortes',
-        codigo: '0:00:00 (K1)'
-      },
-      {
-        idProducto: 3,
-        idBodega: 1,
-        nombre: 'Pisco Quebranta',
-        descripcion: 'Pisco puro de uva Quebranta, aromático y suave',
-        precio: 95.00,
-        stock: 30,
-        codigoBarras: '1234567890125',
-        categoria: 'Piscos',
-        tipoUva: 'Quebranta',
-        marca: 'Viña Octrojé',
-        imagenUrl: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-        calificacion: 5,
-        aniosCosecha: 'Años 4 cortes',
-        codigo: '0:00:00 (K3)',
-        enOferta: true
-      },
-      {
-        idProducto: 4,
-        idBodega: 1,
-        nombre: 'Vino Espumoso Brut',
-        descripcion: 'Vino espumoso brut con burbujas finas y persistentes',
-        precio: 180.00,
-        stock: 15,
-        codigoBarras: '1234567890126',
-        categoria: 'Vinos Espumosos',
-        tipoUva: 'Torontel',
-        marca: 'Tabernero',
-        imagenUrl: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-        calificacion: 4,
-        aniosCosecha: 'Años 4 cortes',
-        codigo: '0:00:00 (K4)'
-      },
-      {
-        idProducto: 5,
-        idBodega: 1,
-        nombre: 'Vino Blanco Seco',
-        descripcion: 'Vino blanco seco con notas cítricas y frescas',
-        precio: 75.00,
-        stock: 35,
-        codigoBarras: '1234567890127',
-        categoria: 'Vinos Blancos',
-        tipoUva: 'Torontel',
-        marca: 'Queirodo',
-        imagenUrl: 'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-        calificacion: 4,
-        aniosCosecha: 'Años 3 cortes',
-        codigo: '0:00:00 (K2)'
-      },
-      {
-        idProducto: 6,
-        idBodega: 1,
-        nombre: 'Pisco Acholado',
-        descripcion: 'Pisco acholado, blend de uvas aromáticas',
-        precio: 89.90,
-        stock: 20,
-        codigoBarras: '1234567890128',
-        categoria: 'Piscos',
-        tipoUva: 'Quebranta',
-        marca: 'Ica Alianza',
-        imagenUrl: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-        calificacion: 4,
-        aniosCosecha: 'Años 4 cortes',
-        codigo: '0:00:00 (K6)'
-      }
-    ];
-    this.productosFiltrados = this.productos;
-    this.productosMasVendidos = this.productos.slice(0, 4);
   }
 }

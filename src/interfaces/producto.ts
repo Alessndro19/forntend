@@ -1,19 +1,19 @@
 export interface Producto {
-  idProducto?: number;
+  idProducto: number;
   idBodega: number;
   nombre: string;
   descripcion: string;
   precio: number;
+  precioOriginal?: number;
   stock: number;
   codigoBarras: string;
   categoria: string;
   tipoUva: string;
   marca: string;
-  imagenUrl?: string;
-  calificacion?: number; // 1-5 estrellas
-  aniosCosecha?: string;
-  codigo?: string;
-  bodega?: string;
+  imagenUrl: string;
+  calificacion: number;
+  aniosCosecha: string;
+  codigo: string;
+  bodega: string;
   enOferta?: boolean;
-  precioOriginal?: number;
 }
